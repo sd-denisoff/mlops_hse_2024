@@ -21,6 +21,3 @@ class LinRegModel(MLModel):
     def fit(self, X: Union[pd.DataFrame, np.array], y: Union[pd.Series, np.array]):
         self.model = self.model_class(**self.hyperparams)
         self.model.fit(X, y)
-
-    def predict(self, X: Union[pd.DataFrame, np.array]): 
-        return self.model.predict(X)
