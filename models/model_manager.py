@@ -1,12 +1,15 @@
 import os
 import joblib
 from pathlib import Path
-from models.ml_models import LinRegModel
+from .ml_models.ml_models import LinRegModel
 import hashlib
 
 # логика по подсчету хешей 
 
 class ModelManager:
+    model_classes = {
+        "linreg": LinRegModel,
+    }
     def __init__(self, storage_dir, hash_len=16):
         """
         Инициализация ModelManager с директорией для хранения моделей.
@@ -14,9 +17,6 @@ class ModelManager:
         """
         self.storage_dir = Path(storage_dir)
         self.storage_dir.mkdir(parents=True, exist_ok=True)
-        self.model_classes = {
-            "linreg": LinRegModel,
-        }
         self.hash_len = hash_len
 
     def create_trainer(self, model_type, model_params=None):
@@ -27,7 +27,7 @@ class ModelManager:
         :return: Экземпляр тренера.
         """
         if model_type in self.model_classes:
-            return self.model_classes[model_type](**model_params)
+            return self.model_classes[model_type](hyperparams=model_params)
         else:
             raise ValueError(f"Unsupported model type '{model_type}'")
         
@@ -71,7 +71,7 @@ class ModelManager:
         # TO DO: склеить X_train и y_train для подачи в generate_model_name
         model_name = self.generate_model_name(model_type, model_params, X_train)
 
-        self.save_model(trainer.model, model_name)
+        self.save_model(trainer, model_name)
 
         return model_name
 
@@ -114,14 +114,15 @@ class ModelManager:
         """
         return [file.name for file in self.storage_dir.glob("*.joblib")]
     
-    # def predict(self, model_name, X):
-    #     """
-    #     Делает предсказание для обученной модели
-    #     :param model_name: Имя файла модели для загрузки.
-    #     :param X: Данные для предсказания модели
-    #     :return: Загруженная модель.
-    #     """
+    def predict(self, model_name, X):
+        """
+        Делает предсказание для обученной модели
+        :param model_name: Имя файла модели для загрузки.
+        :param X: Данные для предсказания модели
+        :return: Загруженная модель.
+        """
 
-    #     model = self.load_model(model_name)
+        model = self.load_model(model_name)
+        return model.predict(X)
 
 
