@@ -4,8 +4,9 @@ Abstract model class
 
 import abc
 import pandas as pd
+import numpy as np
 from dataclasses import dataclass
-from typing import Literal
+from typing import Literal, Union
 
 
 @dataclass
@@ -16,10 +17,14 @@ class MLModel(abc.ABC):
 
     hyperparams: dict
     @abc.abstractclassmethod
-    def fit(self, X: pd.DataFrame, y: pd.Series): pass
+    def fit(
+        self,
+        X: Union[pd.DataFrame, np.array],
+        y: Union[pd.Series, np.array]
+    ): pass
 
     @abc.abstractclassmethod
-    def predict(self, X: pd.DataFrame): pass
+    def predict(self, X: Union[pd.DataFrame, np.array]): pass
 
     @abc.abstractclassmethod
     def save(self, storage: Literal["local", "minio"]) -> tuple[bool, str]:
