@@ -1,30 +1,34 @@
 from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any
-from model_manager import ModelManager
+from models import ModelManager
 import uuid
 
 app = FastAPI()
 
-# Менеджер моделей, предполагаем что он уже имплементирован
 model_manager = ModelManager("/path/to/your/model/storage")
+
 
 class ModelSpec(BaseModel):
     type: str
     parameters: Dict[str, Any]
+
 
 class TrainRequest(BaseModel):
     model_spec: ModelSpec
     features: List[Dict[str, float]]
     targets: List[float]
 
+
 class PredictRequest(BaseModel):
     model_id: str
     features: List[Dict[str, float]]
 
+
 @app.get("/models/")
 async def list_models():
-    return {"linear": {"params": ["coef_", "intercept_"]}, "boosting": {"params": ["learning_rate", "depth", "iterations"]}}
+    return {model_class: model_class._get_param_names() for model_class in model_manager.model_classes.values()}
+
 
 @app.post("/train/")
 async def train_model(train_request: TrainRequest):
@@ -32,21 +36,19 @@ async def train_model(train_request: TrainRequest):
     params = train_request.model_spec.parameters
     features = train_request.features
     targets = train_request.targets
-    
-    # Создать и обучить модель
-    model_id = str(uuid.uuid4())
     try:
-        model_manager.train_and_save_model(model_type, model_id, features, targets, params)
+        model_id = model_manager.train_and_save_model(model_type, features, targets, params)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    
+
     return {"status": "success", "model_id": model_id}
+
 
 @app.post("/predict/")
 async def predict(request: PredictRequest):
     model_id = request.model_id
     features = request.features
-    
+
     try:
         model = model_manager.load_model(model_id)
         predictions = model.predict(features)
@@ -54,11 +56,12 @@ async def predict(request: PredictRequest):
     except Exception as e:
         raise HTTPException(status_code=404, detail=str(e))
 
+
 @app.delete("/models/{model_id}")
 async def delete_model(model_id: str):
     try:
         model_manager.delete_model(model_id)
     except Exception as e:
         raise HTTPException(status_code=404, detail=str(e))
-    
+
     return {"status": "success", "detail": "Model deleted successfully"}
