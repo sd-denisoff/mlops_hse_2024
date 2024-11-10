@@ -1,1 +1,1 @@
-from ml_models.ml_models import *
+from .ml_models.ml_models import *

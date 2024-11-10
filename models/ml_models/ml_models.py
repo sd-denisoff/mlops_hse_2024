@@ -5,9 +5,9 @@ from typing import Union
 import numpy as np
 
 class LinRegModel(MLModel):
+    model_class = LinearRegression
+    
     def __init__(self, hyperparams={}):
-        self.model_class = LinearRegression
-
         missing_params = (
             set(hyperparams.keys())
             .difference(set(self.model_class._get_param_names()))
@@ -22,6 +22,9 @@ class LinRegModel(MLModel):
         self.model = self.model_class(**self.hyperparams)
         self.model.fit(X, y)
 
-    @staticmethod
-    def _get_param_names():
-        return LinearRegression._get_param_names()
+    def predict(self, X):
+        return self.model.predict(X)
+
+    @classmethod
+    def _get_param_names(cls):
+        return cls.model_class._get_param_names()

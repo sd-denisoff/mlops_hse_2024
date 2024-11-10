@@ -71,7 +71,7 @@ class ModelManager:
         # TO DO: склеить X_train и y_train для подачи в generate_model_name
         model_name = self.generate_model_name(model_type, model_params, X_train)
 
-        self.save_model(trainer.model, model_name)
+        self.save_model(trainer, model_name)
 
         return model_name
 
@@ -114,14 +114,15 @@ class ModelManager:
         """
         return [file.name for file in self.storage_dir.glob("*.joblib")]
     
-    # def predict(self, model_name, X):
-    #     """
-    #     Делает предсказание для обученной модели
-    #     :param model_name: Имя файла модели для загрузки.
-    #     :param X: Данные для предсказания модели
-    #     :return: Загруженная модель.
-    #     """
+    def predict(self, model_name, X):
+        """
+        Делает предсказание для обученной модели
+        :param model_name: Имя файла модели для загрузки.
+        :param X: Данные для предсказания модели
+        :return: Загруженная модель.
+        """
 
-    #     model = self.load_model(model_name)
+        model = self.load_model(model_name)
+        return model.predict(X)
 
 
