@@ -1,12 +1,15 @@
 import os
 import joblib
 from pathlib import Path
-from models.ml_models import LinRegModel
+from .ml_models.ml_models import LinRegModel
 import hashlib
 
 # логика по подсчету хешей 
 
 class ModelManager:
+    model_classes = {
+        "linreg": LinRegModel,
+    }
     def __init__(self, storage_dir, hash_len=16):
         """
         Инициализация ModelManager с директорией для хранения моделей.
@@ -14,9 +17,6 @@ class ModelManager:
         """
         self.storage_dir = Path(storage_dir)
         self.storage_dir.mkdir(parents=True, exist_ok=True)
-        self.model_classes = {
-            "linreg": LinRegModel,
-        }
         self.hash_len = hash_len
 
     def create_trainer(self, model_type, model_params=None):
@@ -27,7 +27,7 @@ class ModelManager:
         :return: Экземпляр тренера.
         """
         if model_type in self.model_classes:
-            return self.model_classes[model_type](**model_params)
+            return self.model_classes[model_type](hyperparams=model_params)
         else:
             raise ValueError(f"Unsupported model type '{model_type}'")
         
