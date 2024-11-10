@@ -26,6 +26,10 @@ class MLModel(abc.ABC):
     @abc.abstractclassmethod
     def predict(self, X: Union[pd.DataFrame, np.array]): pass
 
+    @staticmethod
+    @abc.abstractmethod
+    def _get_param_names(): pass
+
     # @abc.abstractclassmethod
     # def save(self, storage: Literal["local", "minio"]) -> tuple[bool, str]:
     #     """
@@ -44,8 +48,7 @@ class MLModel(abc.ABC):
     #             Saving status details
     #     """
     #     pass
-    
-    
+
     def save_model(self, path):
         """
         Сохранение модели в файл.

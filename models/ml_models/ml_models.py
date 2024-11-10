@@ -21,3 +21,7 @@ class LinRegModel(MLModel):
     def fit(self, X: Union[pd.DataFrame, np.array], y: Union[pd.Series, np.array]):
         self.model = self.model_class(**self.hyperparams)
         self.model.fit(X, y)
+
+    @staticmethod
+    def _get_param_names():
+        return LinearRegression._get_param_names()
