@@ -2,11 +2,11 @@ from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any
 from models import ModelManager
-import uuid
+
 
 app = FastAPI()
 
-model_manager = ModelManager("/path/to/your/model/storage")
+model_manager = ModelManager("./saved_models")
 
 
 class ModelSpec(BaseModel):
@@ -49,12 +49,15 @@ async def predict(request: PredictRequest):
     model_id = request.model_id
     features = request.features
 
+    if model_id not in model_manager.list_models():
+        raise HTTPException(status_code=404, detail='Not found model ID')
+
     try:
         model = model_manager.load_model(model_id)
         predictions = model.predict(features)
         return {"model_id": model_id, "predictions": predictions}
     except Exception as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @app.delete("/models/{model_id}")

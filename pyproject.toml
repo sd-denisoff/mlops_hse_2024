@@ -5,7 +5,8 @@ description = "MLOps end-to-end solution"
 authors = ["Stepan Denisov <sd.denisoff@gmail.com>"]
 license = "MIT License"
 readme = "README.md"
-package-mode = false
+# package-mode = false
+packages = [{ include = "models" }, { include = "" }]
 
 [tool.poetry.dependencies]
 python = ">=3.10"
@@ -26,20 +27,8 @@ disallow_untyped_defs = true
 
 [tool.pylint]
 max-line-length = 120
-disable = [
-    "missing-module-docstring",
-    "missing-class-docstring",
-    "missing-function-docstring",
-    "duplicate-code",
-    "unspecified-encoding",
-    "no-member",
-    "fixme",
-]
+disable = ["unspecified-encoding", "no-member", "fixme"]
 good-names = ["db", "df", "fp", "i", "id", "n", "rl", "v", "k", "r", "p"]
-ignore-paths = [
-    "^assistant/markup/tagme/projects/lap/.*$",
-    "^assistant/markup/tagme/projects/lap/.*$",
-]
 
 [tool.black]
 line-length = 120
