@@ -63,6 +63,7 @@ class ModelManager:
         :param X_train: Данные для обучения модели.
         :param y_train: Целевые значения для обучения модели.
         :param model_params: Параметры для модели.
+        :return: ID модели
         """
         trainer = self.create_trainer(model_type, model_params)
         trainer.fit(X_train, y_train)
@@ -71,6 +72,8 @@ class ModelManager:
         model_name = self.generate_model_name(model_type, model_params, X_train)
 
         self.save_model(trainer.model, model_name)
+
+        return model_name
 
     def save_model(self, model, model_name):
         """
