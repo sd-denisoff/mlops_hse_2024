@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "mlops"
+version = "0.1.0"
+description = "MLOps end-to-end solution"
+authors = ["Stepan Denisov <sd.denisoff@gmail.com>"]
+license = "MIT License"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.11"
+fastapi = { version = "^0.115.0", extras = ["all"] }
+scikit-learn = "^1.4.2"
+requests = "^2.32.3"
+
+[tool.poetry.group.dev.dependencies]
+pip-tools = "^7.4.1"
+black = "^24.8.0"
+ruff = "^0.6.5"
+mypy = "^1.11.2"
+
+[tool.mypy]
+disallow_untyped_defs = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
