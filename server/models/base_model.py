@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 from dataclasses import dataclass
 from typing import Literal, Union
-
+import joblib
 
 @dataclass
 class MLModel(abc.ABC):
@@ -26,21 +26,30 @@ class MLModel(abc.ABC):
     @abc.abstractclassmethod
     def predict(self, X: Union[pd.DataFrame, np.array]): pass
 
-    @abc.abstractclassmethod
-    def save(self, storage: Literal["local", "minio"]) -> tuple[bool, str]:
-        """
-        Save model to storage
+    # @abc.abstractclassmethod
+    # def save(self, storage: Literal["local", "minio"]) -> tuple[bool, str]:
+    #     """
+    #     Save model to storage
 
-        Parameters
-        ------------
-            storage: Literal["local", "minio"]
-                Final destination for model saving
+    #     Parameters
+    #     ------------
+    #         storage: Literal["local", "minio"]
+    #             Final destination for model saving
 
-        Returns
-        -----------
-            is_saved: bool
-                Flag for successful saving
-            description: str
-                Saving status details
+    #     Returns
+    #     -----------
+    #         is_saved: bool
+    #             Flag for successful saving
+    #         description: str
+    #             Saving status details
+    #     """
+    #     pass
+    
+    
+    def save_model(self, path):
         """
-        pass
+        Сохранение модели в файл.
+
+        :param path: Путь к файлу, где будет сохранена модель.
+        """
+        joblib.dump(self.model, path)

@@ -24,6 +24,31 @@ mypy = "^1.11.2"
 [tool.mypy]
 disallow_untyped_defs = true
 
+[tool.pylint]
+max-line-length = 120
+disable = [
+    "missing-module-docstring",
+    "missing-class-docstring",
+    "missing-function-docstring",
+    "duplicate-code",
+    "unspecified-encoding",
+    "no-member",
+    "fixme",
+]
+good-names = ["db", "df", "fp", "i", "id", "n", "rl", "v", "k", "r", "p"]
+ignore-paths = [
+    "^assistant/markup/tagme/projects/lap/.*$",
+    "^assistant/markup/tagme/projects/lap/.*$",
+]
+
+[tool.black]
+line-length = 120
+target-version = ['py38', 'py39', 'py310', 'py311']
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

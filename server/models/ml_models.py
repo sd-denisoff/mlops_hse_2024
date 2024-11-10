@@ -24,6 +24,3 @@ class LinRegModel(MLModel):
 
     def predict(self, X: Union[pd.DataFrame, np.array]): 
         return self.model.predict(X)
-
-    def save(self):
-        pass
