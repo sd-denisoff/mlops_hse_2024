@@ -3,6 +3,7 @@ Abstract model class
 """
 
 import abc
+import pandas as pd
 from dataclasses import dataclass
 from typing import Literal
 
@@ -14,7 +15,13 @@ class MLModel(abc.ABC):
     """
 
     hyperparams: dict
+    @abc.abstractclassmethod
+    def fit(self, X: pd.DataFrame, y: pd.Series): pass
 
+    @abc.abstractclassmethod
+    def predict(self, X: pd.DataFrame): pass
+
+    @abc.abstractclassmethod
     def save(self, storage: Literal["local", "minio"]) -> tuple[bool, str]:
         """
         Save model to storage

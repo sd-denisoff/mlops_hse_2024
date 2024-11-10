@@ -8,10 +8,12 @@ readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]
-python = ">=3.11"
+python = ">=3.10"
 fastapi = { version = "^0.115.0", extras = ["all"] }
 scikit-learn = "^1.4.2"
 requests = "^2.32.3"
+jupyterlab = "^4.3.0"
+pandas = "^2.2.3"
 
 [tool.poetry.group.dev.dependencies]
 pip-tools = "^7.4.1"
