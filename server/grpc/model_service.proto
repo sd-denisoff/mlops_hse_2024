@@ -1,12 +1,14 @@
+// python -m grpc_tools.protoc -I ./server/grpc --python_out=./server/grpc --grpc_python_out=./server/grpc ./server/grpc/model_service.proto
+
 syntax = "proto3";
 
 package modelapi;
 
 service ModelService {
-    rpc ListModels (Empty) returns (ModelList);
-    rpc TrainModel (TrainRequest) returns (TrainResponse);
-    rpc Predict (PredictRequest) returns (PredictResponse);
-    rpc DeleteModel (DeleteRequest) returns (DeleteResponse);
+    rpc list_models (Empty) returns (ModelList);
+    rpc train_model (TrainRequest) returns (TrainResponse);
+    rpc get_predictions (PredictRequest) returns (PredictResponse);
+    rpc delete_model (DeleteRequest) returns (DeleteResponse);
 }
 
 message Empty {}
@@ -19,15 +21,15 @@ message ModelSpec {
     repeated string parameters = 1;
 }
 
+message FeatureSet {
+    map<string, double> features = 1;
+}
+
 message TrainRequest {
     string type = 1;
     map<string, string> parameters = 2;
     repeated FeatureSet features = 3;
     repeated double targets = 4;
-}
-
-message FeatureSet {
-    map<string, double> features = 1;
 }
 
 message TrainResponse {

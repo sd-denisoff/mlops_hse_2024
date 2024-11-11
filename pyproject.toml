@@ -5,7 +5,6 @@ description = "MLOps end-to-end solution"
 authors = ["Stepan Denisov <sd.denisoff@gmail.com>"]
 license = "MIT License"
 readme = "README.md"
-# package-mode = false
 packages = [{ include = "models" }, { include = "" }]
 
 [tool.poetry.dependencies]
@@ -15,6 +14,8 @@ scikit-learn = "^1.4.2"
 requests = "^2.32.3"
 jupyterlab = "^4.3.0"
 pandas = "^2.2.3"
+grpcio = "^1.67.1"
+grpcio-tools = "^1.67.1"
 
 [tool.poetry.group.dev.dependencies]
 pip-tools = "^7.4.1"
@@ -32,7 +33,7 @@ good-names = ["db", "df", "fp", "i", "id", "n", "rl", "v", "k", "r", "p"]
 
 [tool.black]
 line-length = 120
-target-version = ['py38', 'py39', 'py310', 'py311']
+target-version = ["py310", "py311", "py312", "py313"]
 
 [tool.isort]
 profile = "black"

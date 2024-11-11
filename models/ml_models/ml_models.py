@@ -1,30 +1,25 @@
-from .base_model import MLModel
+"""
+Linear regression model
+"""
+
 from sklearn.linear_model import LinearRegression
-import pandas as pd
-from typing import Union
-import numpy as np
+
+from models import MLModel, DataType, TargetType
+
 
 class LinRegModel(MLModel):
+    """
+    Work with LinearRegression estimator
+    """
+
     model_class = LinearRegression
-    
-    def __init__(self, hyperparams={}):
-        missing_params = (
-            set(hyperparams.keys())
-            .difference(set(self.model_class._get_param_names()))
-        )
-        assert len(missing_params) == 0, \
-        f"hyperparams {missing_params} are not available"
 
-        self.hyperparams = hyperparams
-        
-
-    def fit(self, X: Union[pd.DataFrame, np.array], y: Union[pd.Series, np.array]):
-        self.model = self.model_class(**self.hyperparams)
+    def fit(self, X: DataType, y: TargetType):
         self.model.fit(X, y)
 
-    def predict(self, X):
+    def predict(self, X: DataType) -> TargetType:
         return self.model.predict(X)
 
     @classmethod
-    def _get_param_names(cls):
+    def get_param_names(cls) -> list[str]:
         return cls.model_class._get_param_names()
