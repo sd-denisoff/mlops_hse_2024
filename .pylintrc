@@ -1,0 +1,3 @@
+[MASTER]
+ignore=proto, setup.py
+good-names=db, df, fp, i, id, n, rl, v, k, r, p, X, X_train

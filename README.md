@@ -14,9 +14,9 @@
 
 Стек технологий:
 
-<div align="left">
+<div>
   <img src="https://skillicons.dev/icons?i=py" height="40" alt="python" />
-  <img src="https://skillicons.dev/icons?i=flask" height="40" alt="flask" />
+  <img src="https://skillicons.dev/icons?i=fastapi" height="40" alt="fastapi" />
   <img src="https://raw.githubusercontent.com/grpc/grpc.io/refs/heads/main/static/img/grpc.svg" height="40" alt="grpc" />
   <img src="https://cdn.simpleicons.org/streamlit/FF4B4B" height="40" alt="streamlit" />
   <img src="https://skillicons.dev/icons?i=docker" height="40" alt="docker" />
@@ -32,6 +32,15 @@
 ### Инструкция по запуску
 
 > TBA
+
+Проверка кода:
+
+```bash
+cd <project_root_directory>
+pylint .
+black --extend-exclude='/server/grpc/proto/*' .
+ ruff check --exclude='*.ipynb' .
+```
 
 ### Использование сервиса
 
