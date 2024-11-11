@@ -15,6 +15,7 @@ requests = "^2.32.3"
 pandas = "^2.2.3"
 grpcio = "^1.67.1"
 grpcio-tools = "^1.67.1"
+catboost = "^1.2.7"
 
 [tool.poetry.group.dev.dependencies]
 pip-tools = "^7.4.1"

@@ -11,7 +11,7 @@ import joblib
 import pandas as pd
 
 from models.ml_models.base_model import MLModel, DataType, TargetType
-from models.ml_models.ml_models import LinRegModel
+from models.ml_models.ml_models import LinRegModel, CatBoostRegModel
 
 ModelType = NewType("ModelType", Literal["lin_reg", "catboost_reg"])
 
@@ -23,6 +23,7 @@ class ModelManager:
 
     model_classes = {
         "lin_reg": LinRegModel,
+        "catboost_reg": CatBoostRegModel,
     }
 
     def __init__(self, storage_dir: str, hash_len: int = 16):

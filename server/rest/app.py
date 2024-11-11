@@ -41,8 +41,8 @@ async def list_models():
     list_models method implementation
     """
     return {
-        model_class.__name__: model_class.get_param_names()
-        for model_class in MODEL_MANAGER.model_classes.values()
+        code: model_class.get_param_names()
+        for code, model_class in MODEL_MANAGER.model_classes.items()
     }
 
 
@@ -93,3 +93,20 @@ async def delete_model(model_id: str):
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
     return {"status": "success", "detail": "Model deleted successfully"}
+
+
+@app.get("/trained_models/")
+async def list_trained_models():
+    """
+    list_trained_models method implementation
+    """
+    return {"trained_models": MODEL_MANAGER.list_models()}
+
+
+@app.get("/status")  
+async def get_status():  
+    """
+    Возвращает статус сервиса
+    """  
+    return {"status": "online"} 
+ 
