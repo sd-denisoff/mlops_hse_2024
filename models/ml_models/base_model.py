@@ -8,8 +8,8 @@ from typing import NewType
 import numpy as np
 import pandas as pd
 
-DataType = NewType("DataType", pd.DataFrame | np.array)
-TargetType = NewType("TargetType", pd.Series | np.array)
+DataType = NewType("DataType", pd.DataFrame | np.ndarray)
+TargetType = NewType("TargetType", pd.Series | np.ndarray)
 
 
 class MLModel(abc.ABC):

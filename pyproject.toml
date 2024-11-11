@@ -5,7 +5,7 @@ description = "MLOps end-to-end solution"
 authors = ["Stepan Denisov <sd.denisoff@gmail.com>"]
 license = "MIT License"
 readme = "README.md"
-packages = [{ include = "models" }, { include = "" }]
+packages = [{ include = "models" }, { include = "server" }]
 
 [tool.poetry.dependencies]
 python = ">=3.10"
