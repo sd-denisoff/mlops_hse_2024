@@ -70,13 +70,13 @@ async def predict(request: PredictRequest):
     """
     model_id = request.model_id
     features = DataFrame(request.features)
-    
+    print(features.shape)
     if model_id not in MODEL_MANAGER.list_models():
         raise HTTPException(status_code=404, detail="Not found model ID")
 
     try:
         model = MODEL_MANAGER.load_model(model_id)
-        predictions = model.predict(features)
+        predictions = list(model.predict(features))
         return {"model_id": model_id, "predictions": predictions}
     except Exception as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

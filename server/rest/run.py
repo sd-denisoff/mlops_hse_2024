@@ -13,7 +13,7 @@ def serve():
 
     try:  
         server.run()  
-    finally:  
+    except KeyboardInterrupt:  
         server.shutdown()
 
 if __name__ == "__main__":
