@@ -10,7 +10,8 @@ from typing import NewType
 import joblib
 import pandas as pd
 
-from models import LinRegModel, MLModel, DataType, TargetType
+from models.ml_models.base_model import MLModel, DataType, TargetType
+from models.ml_models.ml_models import LinRegModel
 
 ModelType = NewType("ModelType", Literal["lin_reg", "catboost_reg"])
 
@@ -40,10 +41,9 @@ class ModelManager:
         :param model_params: Параметры для модели.
         :return: Экземпляр тренера.
         """
-        if model_type in self.model_classes:
-            return self.model_classes[model_type](hyperparams=model_params or {})
-        else:
+        if model_type not in self.model_classes:
             raise ValueError(f"Unsupported model type '{model_type}'")
+        return self.model_classes[model_type](hyperparams=model_params or {})
 
     def hash_string(self, s: str) -> str:
         """
@@ -85,7 +85,7 @@ class ModelManager:
         X_train: DataType,
         y_train: TargetType,
         model_params: dict = None,
-    ):
+    ) -> str:
         """
         Создаёт, обучает и сохраняет модель.
         :param model_type: (из списка ModelType).
@@ -121,10 +121,9 @@ class ModelManager:
         :return: Загруженная модель.
         """
         model_path = self.storage_dir / f"{model_name}.joblib"
-        if model_path.exists():
-            return joblib.load(model_path)
-        else:
+        if not model_path.exists():
             raise FileNotFoundError(f"Model for loading {model_name} not found.")
+        return joblib.load(model_path)
 
     def delete_model(self, model_name: str):
         """

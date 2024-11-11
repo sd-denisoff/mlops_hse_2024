@@ -24,12 +24,12 @@ class MLModel(abc.ABC):
         hyperparams = hyperparams or {}
 
         missing_params = (
-            set(hyperparams.keys()) - set(self.__class__._get_param_names())
+            set(hyperparams.keys()) - set(self.__class__.get_param_names())
         )
-        assert len(missing_params) == 0, f"hyperparams {missing_params} are not passed"
+        assert len(missing_params) == 0, f"Hyperparams {missing_params} are not passed"
 
         self.hyperparams = hyperparams
-        self.model = self.model_class(**self.hyperparams)
+        self.model = self.model_class(**self.hyperparams)  # pylint: disable=not-callable
 
     @abc.abstractmethod
     def fit(self, X: DataType, y: TargetType):
@@ -39,7 +39,6 @@ class MLModel(abc.ABC):
         :param y: targets
         :return: None
         """
-        pass
 
     @abc.abstractmethod
     def predict(self, X: DataType) -> TargetType:
@@ -48,7 +47,6 @@ class MLModel(abc.ABC):
         :param X: test objects
         :return: predictions
         """
-        pass
 
     @classmethod
     @abc.abstractmethod
@@ -57,4 +55,3 @@ class MLModel(abc.ABC):
         Get whole list of hyperparameters
         :return: parameters list
         """
-        pass

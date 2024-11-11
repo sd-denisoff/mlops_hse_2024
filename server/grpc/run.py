@@ -6,8 +6,8 @@ from concurrent import futures
 
 import grpc
 
-import model_service_pb2_grpc
-from app.grpc.server import ModelService
+from server.grpc.app import ModelService
+from server.grpc.proto import model_service_pb2_grpc
 
 
 def serve():

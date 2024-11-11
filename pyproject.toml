@@ -12,7 +12,6 @@ python = ">=3.10"
 fastapi = { version = "^0.115.0", extras = ["all"] }
 scikit-learn = "^1.4.2"
 requests = "^2.32.3"
-jupyterlab = "^4.3.0"
 pandas = "^2.2.3"
 grpcio = "^1.67.1"
 grpcio-tools = "^1.67.1"
@@ -21,7 +20,9 @@ grpcio-tools = "^1.67.1"
 pip-tools = "^7.4.1"
 black = "^24.8.0"
 ruff = "^0.6.5"
+pylint = "^3.3.1"
 mypy = "^1.11.2"
+jupyterlab = "^4.3.0"
 
 [tool.mypy]
 disallow_untyped_defs = true
@@ -29,7 +30,7 @@ disallow_untyped_defs = true
 [tool.pylint]
 max-line-length = 120
 disable = ["unspecified-encoding", "no-member", "fixme"]
-good-names = ["db", "df", "fp", "i", "id", "n", "rl", "v", "k", "r", "p"]
+good-names = ["db", "df", "fp", "i", "id", "n", "rl", "v", "k", "r", "p", "X"]
 
 [tool.black]
 line-length = 120

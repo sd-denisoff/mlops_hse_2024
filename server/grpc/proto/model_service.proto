@@ -1,4 +1,4 @@
-// python -m grpc_tools.protoc -I ./server/grpc --python_out=./server/grpc --grpc_python_out=./server/grpc ./server/grpc/model_service.proto
+// python -m grpc_tools.protoc -I ./server/grpc/proto --python_out=./server/grpc/proto --grpc_python_out=./server/grpc/proto ./server/grpc/proto/model_service.proto
 
 syntax = "proto3";
 
@@ -34,7 +34,7 @@ message TrainRequest {
 
 message TrainResponse {
     string status = 1;
-    string model_id = 2;
+    optional string model_id = 2;
 }
 
 message PredictRequest {

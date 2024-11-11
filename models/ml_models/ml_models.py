@@ -4,7 +4,7 @@ Linear regression model
 
 from sklearn.linear_model import LinearRegression
 
-from models import MLModel, DataType, TargetType
+from models.ml_models.base_model import MLModel, DataType, TargetType
 
 
 class LinRegModel(MLModel):
@@ -22,4 +22,4 @@ class LinRegModel(MLModel):
 
     @classmethod
     def get_param_names(cls) -> list[str]:
-        return cls.model_class._get_param_names()
+        return cls.model_class._get_param_names()  # pylint: disable=protected-access
