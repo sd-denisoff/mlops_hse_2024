@@ -40,7 +40,7 @@ async def list_models():
     list_models method implementation
     """
     return {
-        model_class.__class__.__name__: model_class.get_param_names()
+        model_class.__name__: model_class.get_param_names()
         for model_class in MODEL_MANAGER.model_classes.values()
     }
 
