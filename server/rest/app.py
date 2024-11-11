@@ -14,12 +14,14 @@ app = FastAPI()
 
 class ModelSpec(BaseModel):
     """ModelSpec model"""
+
     type: str
     parameters: dict[str, Any]
 
 
 class TrainRequest(BaseModel):
     """TrainRequest model"""
+
     model_spec: ModelSpec
     features: list[dict[str, float]]
     targets: list[float]
@@ -27,6 +29,7 @@ class TrainRequest(BaseModel):
 
 class PredictRequest(BaseModel):
     """PredictRequest model"""
+
     model_id: str
     features: list[dict[str, float]]
 
@@ -68,7 +71,7 @@ async def predict(request: PredictRequest):
     features = request.features
 
     if model_id not in MODEL_MANAGER.list_models():
-        raise HTTPException(status_code=404, detail='Not found model ID')
+        raise HTTPException(status_code=404, detail="Not found model ID")
 
     try:
         model = MODEL_MANAGER.load_model(model_id)

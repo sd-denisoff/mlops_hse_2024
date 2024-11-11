@@ -23,9 +23,7 @@ class MLModel(abc.ABC):
     def __init__(self, hyperparams: dict = None):
         hyperparams = hyperparams or {}
 
-        missing_params = (
-            set(hyperparams.keys()) - set(self.__class__.get_param_names())
-        )
+        missing_params = set(hyperparams.keys()) - set(self.__class__.get_param_names())
         assert len(missing_params) == 0, f"Hyperparams {missing_params} are not passed"
 
         self.hyperparams = hyperparams

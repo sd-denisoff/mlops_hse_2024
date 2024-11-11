@@ -33,6 +33,15 @@
 
 > TBA
 
+Проверка кода:
+
+```bash
+cd <project_root_directory>
+pylint .
+black --extend-exclude='/server/grpc/proto/*' .
+ ruff check --exclude='*.ipynb' .
+```
+
 ### Использование сервиса
 
 > TBA

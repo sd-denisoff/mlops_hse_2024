@@ -51,7 +51,7 @@ class ModelManager:
         :param s: Идентификатор модели
         :return: Хэш длины self.hash_len
         """
-        return hashlib.sha256(s.encode()).hexdigest()[:self.hash_len]
+        return hashlib.sha256(s.encode()).hexdigest()[: self.hash_len]
 
     def generate_model_name(
         self,
@@ -67,7 +67,7 @@ class ModelManager:
         :return: Хэш длины self.hash_len
         """
         # Генерация хэша для параметров
-        params_string = ''.join([str(param) for param in sorted(model_params.items())])
+        params_string = "".join([str(param) for param in sorted(model_params.items())])
         params_hash = self.hash_string(params_string)
 
         # Генерация хэша для DataFrame
