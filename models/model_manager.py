@@ -141,7 +141,7 @@ class ModelManager:
         Возвращает список всех моделей, сохраненных в директории.
         :return: Список имен файлов моделей.
         """
-        return [file.name for file in self.storage_dir.glob("*.joblib")]
+        return [Path(file).stem for file in self.storage_dir.glob("*.joblib")]
 
     def predict(self, model_name: str, X: DataType) -> TargetType:
         """

@@ -159,3 +159,4 @@ cython_debug/
 
 sert
 sert.1
+saved_models/*

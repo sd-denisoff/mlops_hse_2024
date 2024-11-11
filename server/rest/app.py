@@ -6,6 +6,7 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from pandas import DataFrame
 
 from models.model_manager import MODEL_MANAGER
 
@@ -52,7 +53,7 @@ async def train_model(train_request: TrainRequest):
     """
     model_type = train_request.model_spec.type
     params = train_request.model_spec.parameters
-    features = train_request.features
+    features = DataFrame(train_request.features)
     targets = train_request.targets
     try:
         model_id = MODEL_MANAGER.train_and_save_model(model_type, features, targets, params)
@@ -68,8 +69,8 @@ async def predict(request: PredictRequest):
     predict method implementation
     """
     model_id = request.model_id
-    features = request.features
-
+    features = DataFrame(request.features)
+    
     if model_id not in MODEL_MANAGER.list_models():
         raise HTTPException(status_code=404, detail="Not found model ID")
 
