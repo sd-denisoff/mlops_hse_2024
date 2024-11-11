@@ -8,9 +8,13 @@ def serve():
     """
     Run REST server
     """
-    config = uvicorn.Config("app:app", port=8000)
+    config = uvicorn.Config("app:app", port=8080)
     server = uvicorn.Server(config)
-    server.run()
+    
+    try:  
+        server.run()  
+    finally:  
+        server.stop()
 
 if __name__ == "__main__":
     serve()
