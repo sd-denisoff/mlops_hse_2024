@@ -31,9 +31,25 @@
 
 ### Инструкция по запуску
 
-> TBA
+#### FastApi
 
-Проверка кода:
+1. Запустите сервер FastApi
+
+```
+poetry run python3 server/rest/run.py
+``` 
+
+или 
+
+```
+poetry run uvicorn server.rest.app:app --port <your_port>
+```
+
+2. Запустите streamlit
+
+> TBA 
+
+### Проверка кода:
 
 ```bash
 cd <project_root_directory>
