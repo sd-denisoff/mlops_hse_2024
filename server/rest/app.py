@@ -35,6 +35,14 @@ class PredictRequest(BaseModel):
     features: list[dict[str, float]]
 
 
+@app.get("/status")
+async def get_status():
+    """
+    Возвращает статус сервиса
+    """
+    return {"status": "online"}
+
+
 @app.get("/models")
 async def list_models():
     """
@@ -44,6 +52,14 @@ async def list_models():
         model.__name__: model.get_param_names()
         for model in MODEL_MANAGER.model_classes
     }
+
+
+@app.get("/trained_models")
+async def list_trained_models():
+    """
+    list_trained_models method implementation
+    """
+    return {"trained_models": MODEL_MANAGER.list_models()}
 
 
 @app.post("/train")
@@ -99,19 +115,3 @@ async def delete_model(model_id: str):
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
     return {"status": "success", "detail": "Model deleted successfully"}
-
-
-@app.get("/trained_models")
-async def list_trained_models():
-    """
-    list_trained_models method implementation
-    """
-    return {"trained_models": MODEL_MANAGER.list_models()}
-
-
-@app.get("/status")
-async def get_status():
-    """
-    Возвращает статус сервиса
-    """
-    return {"status": "online"}
