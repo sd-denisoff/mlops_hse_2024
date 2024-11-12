@@ -13,9 +13,9 @@ from gui.utils import init_page, API_URL, read_dataset
 
 init_page(title="Предсказания", desc="Получение предсказаний выбранной модели")
 
-available_models = requests.get(f"{API_URL}/trained_models").json()["trained_models"]
+trained_models = requests.get(f"{API_URL}/trained_models").json()["trained_models"]
 
-if not available_models:
+if not trained_models:
     st.info("Нет обученных моделей", icon="ℹ️")
     st.stop()
 
@@ -23,7 +23,7 @@ col1, col2 = st.columns(2)
 
 model_id = col1.selectbox(
     label="Обученная модель",
-    options=available_models,
+    options=trained_models,
     help="Выберите обученную модель",
 )
 
