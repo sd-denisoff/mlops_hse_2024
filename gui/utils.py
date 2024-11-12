@@ -65,6 +65,8 @@ def process_auth():
     login = st.text_input("Логин", placeholder=USERNAME)
     password = st.text_input("Пароль", type="password", placeholder=PASSWORD)
     if login != USERNAME or password != PASSWORD:
+        if login and password:
+            st.error("Неверные данные", icon="🚨")
         st.stop()
     st.session_state["jwt_token"] = str(uuid.uuid4())
     st.rerun()
