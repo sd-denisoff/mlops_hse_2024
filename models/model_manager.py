@@ -3,6 +3,7 @@ Manager for models
 """
 
 import hashlib
+import logging
 from pathlib import Path
 
 import joblib
@@ -10,6 +11,8 @@ import pandas as pd
 
 from models.ml_models.base_model import MLModel, DataType, TargetType
 from models.ml_models.ml_models import LinRegModel, CatBoostRegModel
+
+LOGGER = logging.getLogger(__name__)
 
 
 class ModelManager:
@@ -97,11 +100,15 @@ class ModelManager:
         trainer = self.create_trainer(model_type, model_params)
         trainer.fit(X_train, y_train)
 
+        LOGGER.info(f"Model {model_type} trained")
+
         merged_data = X_train.copy()
         merged_data["target"] = list(y_train)
 
         model_name = self._generate_model_name(model_type, model_params, merged_data)
         self.save_model(trainer, model_name)
+
+        LOGGER.info(f"Model {model_type} saved with name: {model_name}")
 
         return model_name
 
@@ -123,6 +130,7 @@ class ModelManager:
         model_path = self._storage_dir / f"{model_name}.joblib"
         if not model_path.exists():
             raise FileNotFoundError(f"Model for loading {model_name} not found.")
+        LOGGER.info(f"Loading model {model_name}")
         return joblib.load(model_path)
 
     def delete_model(self, model_name: str):
@@ -132,6 +140,7 @@ class ModelManager:
         """
         model_path = self._storage_dir / f"{model_name}.joblib"
         if model_path.exists():
+            LOGGER.info(f"Deleting model {model_name}")
             model_path.unlink()
         else:
             raise FileNotFoundError(f"Model for deleting {model_name} not found.")
@@ -151,6 +160,7 @@ class ModelManager:
         :return: Предсказания
         """
         model = self.load_model(model_name)
+        LOGGER.info(f"Getting predictions for model {model_name}")
         return model.predict(X)
 
 

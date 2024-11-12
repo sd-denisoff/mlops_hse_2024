@@ -2,6 +2,7 @@
 REST server implementation
 """
 
+import logging
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
@@ -9,6 +10,8 @@ from pandas import DataFrame
 from pydantic import BaseModel
 
 from models.model_manager import MODEL_MANAGER
+
+LOGGER = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -40,6 +43,7 @@ async def get_status():
     """
     Возвращает статус сервиса
     """
+    LOGGER.info("get_status called")
     return {"status": "online"}
 
 
@@ -48,9 +52,9 @@ async def list_models():
     """
     list_models method implementation
     """
+    LOGGER.info("list_models called")
     return {
-        model.__name__: model.get_param_names()
-        for model in MODEL_MANAGER.model_classes
+        model.__name__: model.get_param_names() for model in MODEL_MANAGER.model_classes
     }
 
 
@@ -59,6 +63,7 @@ async def list_trained_models():
     """
     list_trained_models method implementation
     """
+    LOGGER.info("list_trained_models called")
     return {"trained_models": MODEL_MANAGER.list_models()}
 
 
@@ -67,6 +72,8 @@ async def train_model(train_request: TrainRequest):
     """
     train_model method implementation
     """
+    LOGGER.info("train_model called")
+
     model_type = train_request.model_spec.type
     params = train_request.model_spec.parameters
     features = DataFrame(train_request.features)
@@ -90,6 +97,8 @@ async def predict(request: PredictRequest):
     """
     predict method implementation
     """
+    LOGGER.info("predict called")
+
     model_id = request.model_id
     features = DataFrame(request.features)
 
@@ -109,6 +118,8 @@ async def delete_model(model_id: str):
     """
     delete_model method implementation
     """
+    LOGGER.info("delete_model called")
+
     try:
         MODEL_MANAGER.delete_model(model_id)
     except Exception as exc:

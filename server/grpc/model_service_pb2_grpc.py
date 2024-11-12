@@ -34,6 +34,11 @@ class ModelServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.status = channel.unary_unary(
+                '/modelapi.ModelService/status',
+                request_serializer=model__service__pb2.Empty.SerializeToString,
+                response_deserializer=model__service__pb2.ServiceStatus.FromString,
+                _registered_method=True)
         self.list_models = channel.unary_unary(
                 '/modelapi.ModelService/list_models',
                 request_serializer=model__service__pb2.Empty.SerializeToString,
@@ -58,6 +63,12 @@ class ModelServiceStub(object):
 
 class ModelServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
+
+    def status(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def list_models(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -86,6 +97,11 @@ class ModelServiceServicer(object):
 
 def add_ModelServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'status': grpc.unary_unary_rpc_method_handler(
+                    servicer.status,
+                    request_deserializer=model__service__pb2.Empty.FromString,
+                    response_serializer=model__service__pb2.ServiceStatus.SerializeToString,
+            ),
             'list_models': grpc.unary_unary_rpc_method_handler(
                     servicer.list_models,
                     request_deserializer=model__service__pb2.Empty.FromString,
@@ -116,6 +132,33 @@ def add_ModelServiceServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class ModelService(object):
     """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def status(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/modelapi.ModelService/status',
+            model__service__pb2.Empty.SerializeToString,
+            model__service__pb2.ServiceStatus.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def list_models(request,

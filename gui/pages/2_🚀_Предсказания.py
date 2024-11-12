@@ -48,12 +48,17 @@ if st.button(
             json={
                 "model_id": model_id,
                 "features": X_test,
-            }
+            },
         )
 
     if response.ok:
         predictions = response.json().get("predictions")
-        st.info(f"Предсказания: {list(map(lambda x: round(x, 2), predictions))}", icon="ℹ️")
+        st.info(
+            f"Предсказания: {list(map(lambda x: round(x, 2), predictions))}", icon="ℹ️"
+        )
         st.info(f"MSE: {mean_squared_error(y_test, predictions):.2f}", icon="📈")
     else:
-        st.error(f"Ошибка получения предсказаний: {response.json().get("detail", "unknown error")}", icon="🚨")
+        st.error(
+            f"Ошибка получения предсказаний: {response.json().get("detail", "unknown error")}",
+            icon="🚨",
+        )
