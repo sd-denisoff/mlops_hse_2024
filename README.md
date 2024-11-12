@@ -88,7 +88,7 @@ poetry run streamlit run gui/🏚_Главная.py
 ### Проверка качества кода
 
 ```bash
-pylint .
-black --extend-exclude='/server/grpc/proto/*' .
-ruff check --exclude='*.ipynb' .
+poetry run pylint .
+poetry run black --extend-exclude='/server/grpc/*' . 
+poetry run ruff check --exclude='*.ipynb' .
 ```

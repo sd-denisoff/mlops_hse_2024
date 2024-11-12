@@ -33,9 +33,7 @@ with st.expander("Настройка гиперпараметров", expanded=T
     }
 
 cleaned_hyperparameters = {
-    param: value
-    for param, value in defined_hyperparameters.items()
-    if value
+    param: value for param, value in defined_hyperparameters.items() if value
 }
 
 dataset_name = st.selectbox(
@@ -63,10 +61,13 @@ if st.button(
                 },
                 "features": X_train,
                 "targets": y_train,
-            }
+            },
         )
 
     if response.ok:
         st.success(f"ID обученной модели: {response.json().get("model_id")}", icon="✅")
     else:
-        st.error(f"Ошибка обучения модели: {response.json().get("detail", "unknown error")}", icon="🚨")
+        st.error(
+            f"Ошибка обучения модели: {response.json().get("detail", "unknown error")}",
+            icon="🚨",
+        )
