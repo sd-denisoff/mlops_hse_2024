@@ -4,8 +4,13 @@ gRPC server implementation
 
 # pylint: disable=no-member, broad-exception-caught
 
+from concurrent import futures
+
+import grpc
+
 from models.model_manager import MODEL_MANAGER
-from server.grpc.proto import model_service_pb2, model_service_pb2_grpc
+import model_service_pb2
+import model_service_pb2_grpc
 
 
 class ModelService(model_service_pb2_grpc.ModelServiceServicer):
@@ -47,3 +52,19 @@ class ModelService(model_service_pb2_grpc.ModelServiceServicer):
             return model_service_pb2.TrainResponse(status="success", model_id=model_id)
         except Exception as exc:
             return model_service_pb2.TrainResponse(status=str(exc), model_id=None)
+
+
+def serve():
+    """
+    Run gRPC server
+    """
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    model_service_pb2_grpc.add_ModelServiceServicer_to_server(ModelService(), server)
+    server.add_insecure_port("[::]:8080")
+    server.start()
+    print("gRPC server started")
+    server.wait_for_termination()
+
+
+if __name__ == "__main__":
+    serve()

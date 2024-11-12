@@ -66,14 +66,14 @@ poetry install
 3. Запустите сервер
 
 FastAPI:
-
 ```bash
 poetry run uvicorn server.rest.app:app --port 8080 --reload
 ```
 
 gRPC:
-
-> TBA
+```bash
+poetry run python3 server/grpc/server.py
+```
 
 Адрес Swagger в случае запуска сервера на FastAPI: http://localhost:8000/docs
 

@@ -1,10 +1,11 @@
-// python -m grpc_tools.protoc -I ./server/grpc/proto --python_out=./server/grpc/proto --grpc_python_out=./server/grpc/proto ./server/grpc/proto/model_service.proto
+// python -m grpc_tools.protoc -I ./server/grpc --python_out=./server/grpc --grpc_python_out=./server/grpc ./server/grpc/model_service.proto
 
 syntax = "proto3";
 
 package modelapi;
 
 service ModelService {
+    rpc status (Empty) returns (ServiceStatus);
     rpc list_models (Empty) returns (ModelList);
     rpc train_model (TrainRequest) returns (TrainResponse);
     rpc get_predictions (PredictRequest) returns (PredictResponse);
@@ -12,6 +13,10 @@ service ModelService {
 }
 
 message Empty {}
+
+message ServiceStatus {
+    string status = 1;
+}
 
 message ModelList {
     map<string, ModelSpec> models = 1;
