@@ -1,7 +1,9 @@
 """
 Training page
 """
+
 import os
+from time import sleep
 
 import requests
 import streamlit as st
@@ -13,6 +15,7 @@ init_page(title="Обучение модели", desc="Обучение моде
 available_models = requests.get(f"{API_URL}/models").json()
 
 col1, col2 = st.columns(2)
+
 model_to_train = col1.selectbox(
     label="Модель для обучения",
     options=list(available_models.keys()),
@@ -49,17 +52,19 @@ if st.button(
     type="primary",
     use_container_width=True,
 ):
-    response = requests.post(
-        f"{API_URL}/train",
-        json={
-            "model_spec": {
-                "type": model_to_train,
-                "parameters": cleaned_hyperparameters,
-            },
-            "features": X_train,
-            "targets": y_train,
-        }
-    )
+    with st.spinner("Обучение модели"):
+        sleep(5)
+        response = requests.post(
+            f"{API_URL}/train",
+            json={
+                "model_spec": {
+                    "type": model_to_train,
+                    "parameters": cleaned_hyperparameters,
+                },
+                "features": X_train,
+                "targets": y_train,
+            }
+        )
 
     if response.ok:
         st.success(f"ID обученной модели: {response.json().get("model_id")}", icon="✅")

@@ -54,6 +54,14 @@ async def list_models():
     }
 
 
+@app.get("/trained_models")
+async def list_trained_models():
+    """
+    list_trained_models method implementation
+    """
+    return {"trained_models": MODEL_MANAGER.list_models()}
+
+
 @app.post("/train")
 async def train_model(train_request: TrainRequest):
     """
@@ -107,11 +115,3 @@ async def delete_model(model_id: str):
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
     return {"status": "success", "detail": "Model deleted successfully"}
-
-
-@app.get("/trained_models")
-async def list_trained_models():
-    """
-    list_trained_models method implementation
-    """
-    return {"trained_models": MODEL_MANAGER.list_models()}

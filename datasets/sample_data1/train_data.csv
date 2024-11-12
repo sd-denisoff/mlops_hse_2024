@@ -1,4 +1,4 @@
-,feature_A,feature_B,target
-0,1,4,7
-1,2,5,8
-2,3,6,9
+feature_A,feature_B,target
+1,4,7
+2,5,8
+3,6,9
