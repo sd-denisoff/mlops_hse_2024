@@ -161,7 +161,6 @@ sert
 sert.1
 saved_models/*
 models_storage/*
-notebooks/*
 *.tsv
 *.tfevents
 **/catboost_info
