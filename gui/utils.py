@@ -4,13 +4,16 @@ GUI utils
 
 import uuid
 
+import pandas as pd
 import requests
 import streamlit as st
 from PIL import Image
 
 from gui.static import GUI_STATIC_PATH
 
-API_URL = "http://localhost:8000"
+API_URL = "http://localhost:8080"
+
+DATASET_PATH = "datasets"
 
 USERNAME = "admin"
 PASSWORD = "admin"
@@ -76,3 +79,16 @@ def is_server_online() -> bool:
         return response.json().get("status") == "online"
     except requests.exceptions.ConnectionError:
         return False
+
+
+def read_dataset(
+    dataset_name: str,
+    data_type: str,
+) -> tuple[list[dict[str, float]], list[float]]:
+    """
+    Read prepared dataset
+    """
+    data = pd.read_csv(f"{DATASET_PATH}/{dataset_name}/{data_type}_data.csv")
+    y = data["target"].to_list()
+    X = data.drop(columns="target").to_dict(orient="records")
+    return X, y

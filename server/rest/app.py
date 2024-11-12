@@ -35,6 +35,14 @@ class PredictRequest(BaseModel):
     features: list[dict[str, float]]
 
 
+@app.get("/status")
+async def get_status():
+    """
+    Возвращает статус сервиса
+    """
+    return {"status": "online"}
+
+
 @app.get("/models")
 async def list_models():
     """
@@ -107,11 +115,3 @@ async def list_trained_models():
     list_trained_models method implementation
     """
     return {"trained_models": MODEL_MANAGER.list_models()}
-
-
-@app.get("/status")
-async def get_status():
-    """
-    Возвращает статус сервиса
-    """
-    return {"status": "online"}
