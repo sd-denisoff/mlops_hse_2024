@@ -5,8 +5,8 @@ REST server implementation
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
 from pandas import DataFrame
+from pydantic import BaseModel
 
 from models.model_manager import MODEL_MANAGER
 
@@ -35,18 +35,18 @@ class PredictRequest(BaseModel):
     features: list[dict[str, float]]
 
 
-@app.get("/models/")
+@app.get("/models")
 async def list_models():
     """
     list_models method implementation
     """
     return {
-        code: model_class.get_param_names()
-        for code, model_class in MODEL_MANAGER.model_classes.items()
+        model.__name__: model.get_param_names()
+        for model in MODEL_MANAGER.model_classes
     }
 
 
-@app.post("/train/")
+@app.post("/train")
 async def train_model(train_request: TrainRequest):
     """
     train_model method implementation
@@ -55,22 +55,28 @@ async def train_model(train_request: TrainRequest):
     params = train_request.model_spec.parameters
     features = DataFrame(train_request.features)
     targets = train_request.targets
+
     try:
-        model_id = MODEL_MANAGER.train_and_save_model(model_type, features, targets, params)
+        model_id = MODEL_MANAGER.train_and_save_model(
+            model_type=model_type,
+            X_train=features,
+            y_train=targets,
+            model_params=params,
+        )
     except Exception as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     return {"status": "success", "model_id": model_id}
 
 
-@app.post("/predict/")
+@app.post("/predict")
 async def predict(request: PredictRequest):
     """
     predict method implementation
     """
     model_id = request.model_id
     features = DataFrame(request.features)
-    print(features.shape)
+
     if model_id not in MODEL_MANAGER.list_models():
         raise HTTPException(status_code=404, detail="Not found model ID")
 
@@ -95,7 +101,7 @@ async def delete_model(model_id: str):
     return {"status": "success", "detail": "Model deleted successfully"}
 
 
-@app.get("/trained_models/")
+@app.get("/trained_models")
 async def list_trained_models():
     """
     list_trained_models method implementation
@@ -103,10 +109,9 @@ async def list_trained_models():
     return {"trained_models": MODEL_MANAGER.list_models()}
 
 
-@app.get("/status")  
-async def get_status():  
+@app.get("/status")
+async def get_status():
     """
     Возвращает статус сервиса
-    """  
-    return {"status": "online"} 
- 
+    """
+    return {"status": "online"}

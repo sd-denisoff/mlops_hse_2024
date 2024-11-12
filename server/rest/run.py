@@ -1,7 +1,8 @@
 """
 Serve REST
 """
-import uvicorn 
+
+import uvicorn
 
 
 def serve():
@@ -11,10 +12,11 @@ def serve():
     config = uvicorn.Config("app:app", port=8080, reload=True)
     server = uvicorn.Server(config)
 
-    try:  
-        server.run()  
-    except KeyboardInterrupt:  
+    try:
+        server.run()
+    except KeyboardInterrupt:
         server.shutdown()
+
 
 if __name__ == "__main__":
     serve()

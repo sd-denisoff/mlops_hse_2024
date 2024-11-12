@@ -24,44 +24,61 @@
 </div>
 
 Ветки:
+
 - `master` – стабильная версия сервиса с оттестированным и полным функционалом
 - `dev-hw1` – версия сервиса на момент разработки ДЗ-1
 - `dev-hw2` – версия сервиса на момент разработки ДЗ-2
 - `dev-hw3` – версия сервиса на момент разработки ДЗ-3
 
+### Доступный функционал
+
+> TBA
+
 ### Инструкция по запуску
 
-#### FastApi
-
-1. Запустите сервер FastApi
-
-```
-poetry run python3 server/rest/run.py
-``` 
-
-или 
-
-```
-poetry run uvicorn server.rest.app:app --port <your_port>
-```
-
-2. Запустите streamlit
-
-> TBA 
-
-### Проверка кода:
+0. Склонируйте репозиторий и перейдите в директорию с проектом
 
 ```bash
-cd <project_root_directory>
-pylint .
-black --extend-exclude='/server/grpc/proto/*' .
- ruff check --exclude='*.ipynb' .
+git clone https://github.com/sd-denisoff/mlops_hse_2024.git
+cd mlops_hse_2024
 ```
+
+1. Установите зависимости
+
+```bash
+poetry install
+```
+
+2. Запустите сервер
+
+FastAPI:
+
+```bash
+poetry run uvicorn server.rest.app:app --port 8080 --reload
+```
+
+gRPC:
+
+> TBA
+
+Адрес Swagger в случае запуска сервера на FastAPI: http://localhost:8000/docs
+
+3. Запустите графический интерфейс
+
+```bash
+poetry run streamlit run dashboard.py
+```
+
+Адрес дашборда: http://localhost:8501
 
 ### Использование сервиса
 
 > TBA
 
-### Доступный функционал
+### Проверка качества кода
 
-> TBA
+```bash
+pylint .
+black --extend-exclude='/server/grpc/proto/*' .
+ruff check --exclude='*.ipynb' .
+```

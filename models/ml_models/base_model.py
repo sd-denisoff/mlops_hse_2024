@@ -27,7 +27,9 @@ class MLModel(abc.ABC):
         assert len(missing_params) == 0, f"Hyperparams {missing_params} are not passed"
 
         self.hyperparams = hyperparams
-        self.model = self.model_class(**self.hyperparams)  # pylint: disable=not-callable
+        self.model = self.model_class(
+            **self.hyperparams
+        )  # pylint: disable=not-callable
 
     @abc.abstractmethod
     def fit(self, X: DataType, y: TargetType):
