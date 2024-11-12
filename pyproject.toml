@@ -17,6 +17,7 @@ numpy = ">=1.16.0"
 grpcio = "^1.67.1"
 grpcio-tools = "^1.67.1"
 catboost = "^1.2.7"
+streamlit = "^1.40.1"
 
 [tool.poetry.group.dev.dependencies]
 pip-tools = "^7.4.1"
