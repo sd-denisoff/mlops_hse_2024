@@ -5,7 +5,7 @@ description = "MLOps end-to-end solution"
 authors = ["Stepan Denisov <sd.denisoff@gmail.com>"]
 license = "MIT License"
 readme = "README.md"
-packages = [{ include = "models" }, { include = "" }]
+packages = [{ include = "models" }, { include = "server" }]
 
 [tool.poetry.dependencies]
 python = ">=3.10"
@@ -13,8 +13,10 @@ fastapi = { version = "^0.115.0", extras = ["all"] }
 scikit-learn = "^1.4.2"
 requests = "^2.32.3"
 pandas = "^2.2.3"
+numpy = ">=1.16.0"
 grpcio = "^1.67.1"
 grpcio-tools = "^1.67.1"
+catboost = "^1.2.7"
 
 [tool.poetry.group.dev.dependencies]
 pip-tools = "^7.4.1"
@@ -28,17 +30,14 @@ jupyterlab = "^4.3.0"
 disallow_untyped_defs = true
 
 [tool.pylint]
-max-line-length = 120
-disable = ["unspecified-encoding", "no-member", "fixme"]
-good-names = ["db", "df", "fp", "i", "id", "n", "rl", "v", "k", "r", "p", "X"]
+disable = ["unspecified-encoding", "fixme"]
+good-names = ["db", "df", "i", "id", "n", "k", "X", "X_train", "X_test"]
 
 [tool.black]
-line-length = 120
-target-version = ["py310", "py311", "py312", "py313"]
+target-version = ["py310", "py311", "py312"]
 
 [tool.isort]
 profile = "black"
-line_length = 120
 
 [build-system]
 requires = ["poetry-core"]

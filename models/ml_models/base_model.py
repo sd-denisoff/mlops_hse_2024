@@ -8,8 +8,8 @@ from typing import NewType
 import numpy as np
 import pandas as pd
 
-DataType = NewType("DataType", pd.DataFrame | np.array)
-TargetType = NewType("TargetType", pd.Series | np.array)
+DataType = NewType("DataType", pd.DataFrame | np.ndarray)
+TargetType = NewType("TargetType", pd.Series | np.ndarray)
 
 
 class MLModel(abc.ABC):
@@ -27,7 +27,9 @@ class MLModel(abc.ABC):
         assert len(missing_params) == 0, f"Hyperparams {missing_params} are not passed"
 
         self.hyperparams = hyperparams
-        self.model = self.model_class(**self.hyperparams)  # pylint: disable=not-callable
+        self.model = self.model_class(
+            **self.hyperparams
+        )  # pylint: disable=not-callable
 
     @abc.abstractmethod
     def fit(self, X: DataType, y: TargetType):

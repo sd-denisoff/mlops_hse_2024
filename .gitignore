@@ -159,3 +159,8 @@ cython_debug/
 
 sert
 sert.1
+saved_models/*
+models_storage/*
+*.tsv
+*.tfevents
+**/catboost_info
