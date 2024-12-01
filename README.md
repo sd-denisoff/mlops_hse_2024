@@ -85,6 +85,13 @@ poetry run streamlit run gui/🏚_Главная.py
 
 Адрес дашборда: http://localhost:8501
 
+**Запуск через Docker:**
+```bash
+docker build -f Dockerfile.base -t trainer-base:latest .
+docker-compose up --build
+```
+
+
 ### Проверка качества кода
 
 ```bash
