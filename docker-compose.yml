@@ -16,15 +16,18 @@ services:
     image: minio/mc:latest
     volumes:
       - ./create_minio_bucket.sh:/create_minio_bucket.sh
+    depends_on:
+      - minio
     environment:
       MC_HOST_minio: http://${MINIO_ROOT_USER}:${MINIO_ROOT_PASSWORD}@minio:9000
     entrypoint: 
+      - /bin/sh
       - ./create_minio_bucket.sh
 
   rest_app:
     build:
-      context: .
-      dockerfile: server/rest/Dockerfile
+      context: ./server/rest
+      dockerfile: Dockerfile
     container_name: rest_app
     ports:
       - "8080:8080"
@@ -38,8 +41,8 @@ services:
 
   grpc_service:
     build:
-      context: .
-      dockerfile: server/grpc/Dockerfile
+      context: ./server/rest
+      dockerfile: Dockerfile
     container_name: grpc_service
     ports:
       - "50051:50051"
@@ -48,8 +51,8 @@ services:
 
   streamlit:
     build:
-      context: .
-      dockerfile: gui/Dockerfile
+      context: ./gui
+      dockerfile: Dockerfile
     container_name: streamlit_app
     ports:
       - "8501:8501"
