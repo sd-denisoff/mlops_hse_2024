@@ -93,6 +93,10 @@ poetry run streamlit run gui/🏚_Главная.py
 MINIO_ROOT_USER=user
 MINIO_ROOT_PASSWORD=password
 MINIO_BUCKET=trainer-bucket
+
+MLFLOW_PORT=5001
+MLFLOW_DB_PATH=sqlite:///ml_flow.db
+MLFLOW_ARTIFACTS_PATH=/mlflow/artifacts
 ```
 
 2. Запустите сервис
@@ -101,6 +105,16 @@ MINIO_BUCKET=trainer-bucket
 docker build -f Dockerfile.base -t trainer-base:latest .
 docker-compose up --build
 ```
+
+3. Запустите MLflow
+
+```bash
+docker compose -f mlflow-docker-compose.yml up --build
+```
+
+Адрес интерфейса: http://localhost:5001
+
+В рамках ДЗ организовано только развертывание и запуск MLflow. Интеграция с моделями сервиса еще требует настройки.
 
 ### Проверка качества кода
 

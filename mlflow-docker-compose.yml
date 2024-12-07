@@ -6,7 +6,7 @@ services:
     volumes:
       - ./mlflow_artifacts:${MLFLOW_ARTIFACTS_PATH} 
     ports:
-      - 5000:5000
+      - ${MLFLOW_PORT}:${MLFLOW_PORT}
     environment:
       MLFLOW_BACKEND_STORE_URI: ${MLFLOW_DB_PATH}
       MLFLOW_DEFAULT_ARTIFACT_ROOT: ${MLFLOW_ARTIFACTS_PATH} 

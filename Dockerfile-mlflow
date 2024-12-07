@@ -14,6 +14,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Установка MLflow
 RUN pip install --no-cache-dir mlflow boto3 pymysql
 
-EXPOSE 5000
+EXPOSE ${MLFLOW_PORT}
 
-CMD ["mlflow", "server", "--host", "0.0.0.0", "--port", "5000", "--backend-store-uri", "sqlite:///mlflow.db", "--default-artifact-root", "/mlflow/artifacts"]
+CMD ["mlflow", "server", "--host", "0.0.0.0", "--port", "5001", "--backend-store-uri", "${MLFLOW_DB_PATH}", "--default-artifact-root", "${MLFLOW_ARTIFACTS_PATH}"]
