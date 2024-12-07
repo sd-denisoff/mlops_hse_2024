@@ -164,4 +164,6 @@ models_storage/*
 *.tsv
 *.tfevents
 **/catboost_info
+
+# MinIO
 /minio-data
