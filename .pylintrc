@@ -1,0 +1,3 @@
+[MASTER]
+ignore=grpc, gui, setup.py
+good-names=db, df, i, id, n, k, X, X_train, X_test

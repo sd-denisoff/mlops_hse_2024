@@ -1,0 +1,45 @@
+[tool.poetry]
+name = "mlops"
+version = "0.1.0"
+description = "MLOps end-to-end solution"
+authors = ["Stepan Denisov <sd.denisoff@gmail.com>"]
+license = "MIT License"
+readme = "README.md"
+packages = [{ include = "models" }, { include = "server" }]
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+fastapi = { version = "^0.115.0", extras = ["all"] }
+scikit-learn = "^1.4.2"
+requests = "^2.32.3"
+pandas = "^2.2.3"
+numpy = ">=1.16.0"
+grpcio = "^1.67.1"
+grpcio-tools = "^1.67.1"
+catboost = "^1.2.7"
+streamlit = "^1.40.1"
+
+[tool.poetry.group.dev.dependencies]
+pip-tools = "^7.4.1"
+black = "^24.8.0"
+ruff = "^0.6.5"
+pylint = "^3.3.1"
+mypy = "^1.11.2"
+jupyterlab = "^4.3.0"
+
+[tool.mypy]
+disallow_untyped_defs = true
+
+[tool.pylint]
+disable = ["unspecified-encoding", "fixme"]
+good-names = ["db", "df", "i", "id", "n", "k", "X", "X_train", "X_test"]
+
+[tool.black]
+target-version = ["py310", "py311", "py312"]
+
+[tool.isort]
+profile = "black"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

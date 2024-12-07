@@ -156,3 +156,11 @@ cython_debug/
 
 # PyCharm
 .idea/
+
+sert
+sert.1
+saved_models/*
+models_storage/*
+*.tsv
+*.tfevents
+**/catboost_info
