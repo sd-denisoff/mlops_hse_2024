@@ -85,7 +85,18 @@ poetry run streamlit run gui/🏚_Главная.py
 
 Адрес дашборда: http://localhost:8501
 
-**Запуск через Docker:**
+### Запуск всего через Docker
+
+1. Добавьте файл с переменными окружения
+
+```
+MINIO_ROOT_USER=user
+MINIO_ROOT_PASSWORD=password
+MINIO_BUCKET=trainer-bucket
+```
+
+2. Запустите сервис
+
 ```bash
 docker build -f Dockerfile.base -t trainer-base:latest .
 docker-compose up --build

@@ -22,9 +22,9 @@ COPY . .
 RUN poetry config virtualenvs.create false && poetry install --no-interaction
 
 # Инициализация DVC  
-RUN git init && \
-    dvc init && \  
-    dvc remote add -d minio-remote s3://<MINIO_BUCKET> --local && \  
-    dvc config remote.minio-remote.endpointurl http://minio:9000 && \  
-    dvc config remote.minio-remote.access_key_id ${MINIO_ROOT_USER} && \  
-    dvc config remote.minio-remote.secret_access_key ${MINIO_ROOT_PASSWORD}
+# RUN git init && \
+#     dvc init && \  
+#     dvc remote add -d minio-remote s3://<MINIO_BUCKET> --local && \  
+#     dvc config remote.minio-remote.endpointurl http://minio:9000 && \  
+#     dvc config remote.minio-remote.access_key_id ${MINIO_ROOT_USER} && \  
+#     dvc config remote.minio-remote.secret_access_key ${MINIO_ROOT_PASSWORD}

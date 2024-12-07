@@ -1,0 +1,12 @@
+services:
+  mlflow:
+    container_name: mlflow
+    build:
+      dockerfile: Dockerfile-mlflow
+    volumes:
+      - ./mlflow_artifacts:${MLFLOW_ARTIFACTS_PATH} 
+    ports:
+      - 5000:5000
+    environment:
+      MLFLOW_BACKEND_STORE_URI: ${MLFLOW_DB_PATH}
+      MLFLOW_DEFAULT_ARTIFACT_ROOT: ${MLFLOW_ARTIFACTS_PATH} 
