@@ -7,6 +7,11 @@ services:
       - "9001:9001"
     volumes:
       - ./minio-data:/data
+    healthcheck:
+      test: curl -I "http://localhost:9000/minio/health/ready"
+      interval: 5s
+      timeout: 2s
+      retries: 5
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
@@ -17,11 +22,12 @@ services:
     volumes:
       - ./create_minio_bucket.sh:/create_minio_bucket.sh
     depends_on:
-      - minio
+      minio:
+        condition: service_healthy
     environment:
       MINIO_BUCKET: ${MINIO_BUCKET}
-      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
-      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     entrypoint: 
       - /bin/sh
       - ./create_minio_bucket.sh
