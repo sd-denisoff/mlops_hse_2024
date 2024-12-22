@@ -54,6 +54,6 @@ if delete_model_btn:
             col2.success(f"Модель {model_id} удалена")
         else:
             col2.error(
-                f"Ошибка удаления модели: {response.json().get("detail", "unknown error")}",
+                "Ошибка удаления модели: {}".format(response.json().get("detail", "unknown error")),
                 icon="🚨",
             )

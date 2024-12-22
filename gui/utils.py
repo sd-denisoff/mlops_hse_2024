@@ -11,7 +11,7 @@ from PIL import Image
 
 from gui.static import GUI_STATIC_PATH
 
-API_URL = "http://localhost:8080"
+API_URL = "http://rest_app:8080"
 
 DATASET_PATH = "datasets"
 

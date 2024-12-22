@@ -102,7 +102,7 @@ MLFLOW_ARTIFACTS_PATH=/mlflow/artifacts
 2. Запустите сервис
 
 ```bash
-docker build -f Dockerfile.base -t trainer-base:latest .
+docker build -f Dockerfile -t trainer-base:latest .
 docker-compose up --build
 ```
 

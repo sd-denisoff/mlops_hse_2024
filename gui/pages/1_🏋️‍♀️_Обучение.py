@@ -65,9 +65,9 @@ if st.button(
         )
 
     if response.ok:
-        st.success(f"ID обученной модели: {response.json().get("model_id")}", icon="✅")
+        st.success("ID обученной модели: {}".format(response.json().get("model_id")), icon="✅")
     else:
         st.error(
-            f"Ошибка обучения модели: {response.json().get("detail", "unknown error")}",
+            "Ошибка обучения модели: {}".format(response.json().get("detail", "unknown error")),
             icon="🚨",
         )
