@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - main
+      - master
+      - dev-hw3
   pull_request:
     branches:
       - main
+      - master
+      - dev-hw3
 
 jobs:
   build:
@@ -24,10 +28,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/my-python-app:latest .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/mlops-hse-2024:latest .
 
       - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/my-python-app:latest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/mlops-hse-2024:latest
 
   lint:
     name: Run Linters
@@ -52,19 +56,6 @@ jobs:
     name: Run Tests
     runs-on: ubuntu-latest
 
-    services:
-      minio:
-        image: minio/minio
-        options: >-
-          --name minio
-          --env MINIO_ACCESS_KEY=minioadmin
-          --env MINIO_SECRET_KEY=minioadmin
-          --env MINIO_ROOT_USER=minioadmin
-          --env MINIO_ROOT_PASSWORD=minioadmin
-        ports:
-          - 9000:9000
-        command: server /data
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -77,5 +68,5 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
-      - name: Run pytest
-        run: poetry run pytest
+      - name: Run unit tests
+        run: poetry run pytest unit_tests
