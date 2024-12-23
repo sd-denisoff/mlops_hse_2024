@@ -8,5 +8,4 @@ COPY . .
 # Открываем порт для FastAPI
 EXPOSE 8080
 
-# Команда для запуска приложения
-CMD ["python", "run.py"]
+CMD ["ls"]

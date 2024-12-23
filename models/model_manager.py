@@ -10,6 +10,10 @@ from mlflow.models import infer_signature
 import joblib
 import pandas as pd
 from sklearn.metrics import mean_squared_error as mse
+import boto3
+from botocore.exceptions import NoCredentialsError 
+import uuid
+import subprocess
 
 from models.ml_models.base_model import MLModel, DataType, TargetType
 from models.ml_models.ml_models import LinRegModel, CatBoostRegModel
@@ -24,7 +28,17 @@ class ModelManager:
 
     model_classes = [LinRegModel, CatBoostRegModel]
 
-    def __init__(self, storage_dir: str, mlflow_tracking_uri: str, hash_len: int = 16):
+    def __init__(
+            self,
+            storage_dir: str,
+            mlflow_tracking_uri: str,
+            minio_endpoint: str,
+            access_key_id: str,
+            secret_access_key: str,
+            minio_bucket: str,
+            data_dir: str,
+            hash_len: int = 16
+        ):
         """
         Инициализация ModelManager с директорией для хранения моделей и MLflow.
         :param storage_dir: Путь к директории, где будут храниться модели.
@@ -33,10 +47,19 @@ class ModelManager:
         """
         self._storage_dir = Path(storage_dir)
         self._storage_dir.mkdir(parents=True, exist_ok=True)
+        self._data_dir = Path(data_dir)
+        self._data_dir.mkdir(parents=True, exist_ok=True)
         self._hash_len = hash_len
         self._available_models = {model.__name__: model for model in self.model_classes}
         self._mlflow_tracking_uri = mlflow_tracking_uri
         mlflow.set_tracking_uri(self._mlflow_tracking_uri)
+        self.s3_client = boto3.client(  
+            's3',  
+            endpoint_url=minio_endpoint,  
+            aws_access_key_id=access_key_id,  
+            aws_secret_access_key=secret_access_key
+        )
+        self.minio_bucket = minio_bucket
 
     def create_trainer(
         self,
@@ -124,6 +147,9 @@ class ModelManager:
 
             LOGGER.info(f"Model {model_type} saved with name: {model_name}")
 
+        df_name = self.save_data_to_s3(merged_data)
+        LOGGER.info(f"Data for {model_name} saved saved as {df_name} to s3")
+
         return model_name
 
     def save_model(self, model: MLModel, model_name: str):
@@ -176,5 +202,45 @@ class ModelManager:
         model = self.load_model(model_name)
         LOGGER.info(f"Getting predictions for model {model_name}")
         return model.predict(X)
+    
+    def save_data_to_s3(self, dataframe: pd.DataFrame):
+        """
+        Сохраняет полученный pd DataFrame в Minio
+        """
+        df_name = str(uuid.uuid4()) + '.csv'
+        df_path = os.path.join(self._data_dir, df_name)
+        dataframe.to_csv(df_path, index=False)
+        
+        try:   
+            self.s3_client.upload_file(df_path, self.minio_bucket, df_name)
+        except FileNotFoundError:  
+            print(f"The file {df_path} was not found")  
+        except NoCredentialsError:  
+            print("Credentials not available")
 
-MODEL_MANAGER = ModelManager("./models_storage", "http://mlflow:5001")
+        try:  
+            subprocess.run(['dvc', 'add', df_path], check=True)  
+        except subprocess.CalledProcessError as e:  
+            print(f"Error adding file to DVC: {e}")  
+
+        try:  
+            subprocess.run(['dvc', 'push'], check=True)
+        except subprocess.CalledProcessError as e:  
+            print(f"Error pushing files to DVC: {e}")
+        
+        return df_name
+
+minio_endpoint = os.environ.get('MINIO_ENDPOINT', 'http://minio:9000')
+access_key_id = os.environ.get('MINIO_ROOT_USER', 'user')
+secret_access_key = os.environ.get('MINIO_ROOT_PASSWORD', 'password')
+minio_bucket = os.environ.get('MINIO_BUCKET', 'trainer-bucket')
+
+MODEL_MANAGER = ModelManager(
+    "./models_storage",
+    "http://mlflow:5001",
+    minio_endpoint,
+    access_key_id,
+    secret_access_key,
+    minio_bucket,
+    "./data_tmp",
+)

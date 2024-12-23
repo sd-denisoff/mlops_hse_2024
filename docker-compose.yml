@@ -40,7 +40,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      MINIO_ENDPOINT: minio:9000
+      MINIO_ENDPOINT: http://minio:9000
       MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
       MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
       MINIO_BUCKET: ${MINIO_BUCKET}
@@ -48,10 +48,20 @@ services:
     depends_on:
       - minio
       - mlflow
+    entrypoint: /bin/bash
+    command: -c "
+      dvc init --no-scm &&
+      dvc remote add -d minio s3://${MINIO_BUCKET} &&
+      dvc remote modify minio endpointurl http://minio:9000 &&
+      dvc remote modify minio access_key_id ${MINIO_ROOT_USER} &&
+      dvc remote modify minio secret_access_key ${MINIO_ROOT_PASSWORD} &&
+      dvc remote modify minio region us-east-1 &&
+      dvc remote modify minio use_ssl false &&
+      python run.py"
 
   grpc_service:
     build:
-      context: ./server/rest
+      context: ./server/grpc
       dockerfile: Dockerfile
     container_name: grpc_service
     ports:
