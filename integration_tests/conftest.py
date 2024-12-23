@@ -1,20 +1,30 @@
 """
 Pytest fixtures
 """
+
+import os
+
 import pytest
+from dotenv import load_dotenv
 from minio import Minio
+
+load_dotenv()  # загрузка окружения из .env
 
 
 @pytest.fixture(scope="session")
 def minio():
+    minio_port = os.getenv("MINIO_PORT", "9000")
+    access_key = os.getenv("MINIO_ROOT_USER")
+    secret_key = os.getenv("MINIO_ROOT_PASSWORD")
+
     minio_client = Minio(
-        "localhost:9000",
-        access_key="user",  # todo: retrieve from environment
-        secret_key="password",  # todo: retrieve from environment
+        f"localhost:{minio_port}",
+        access_key=access_key,
+        secret_key=secret_key,
         secure=False,
     )
-    bucket_name = "models-bucket"
 
+    bucket_name = "models-test-bucket"
     if not minio_client.bucket_exists(bucket_name):
         minio_client.make_bucket(bucket_name)
 
