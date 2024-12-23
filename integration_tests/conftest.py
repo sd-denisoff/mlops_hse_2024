@@ -9,8 +9,8 @@ from minio import Minio
 def minio():
     minio_client = Minio(
         "localhost:9000",
-        access_key="minioadmin",
-        secret_key="minioadmin",
+        access_key="user",  # todo: retrieve from environment
+        secret_key="password",  # todo: retrieve from environment
         secure=False,
     )
     bucket_name = "models-bucket"

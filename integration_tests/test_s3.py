@@ -2,6 +2,8 @@
 Tests
 """
 
+import io
+
 
 def test_save_model_to_minio(minio):
     """Test model saving"""
@@ -10,9 +12,7 @@ def test_save_model_to_minio(minio):
     model_key = "models/test_model.pkl"
     model_data = b"dummy model data"
 
-    # Загружаем модель в реальный MinIO
-    minio_client.put_object(bucket_name, model_key, data=model_data, length=len(model_data))
+    minio_client.put_object(bucket_name, model_key, data=io.BytesIO(model_data), length=len(model_data))
 
-    # Проверяем, что файл существует
     response = minio_client.get_object(bucket_name, model_key)
     assert response.read() == model_data
