@@ -55,6 +55,9 @@ jobs:
       - name: Run pylint
         run: poetry run pylint .
 
+      - name: Run black
+        run: poetry run black --check --extend-exclude='/server/grpc/*' .
+
   test:
     name: Run Tests
     runs-on: ubuntu-latest

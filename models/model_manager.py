@@ -41,7 +41,7 @@ class ModelManager:
         secret_access_key: str,
         minio_bucket: str,
         data_dir: str,
-        hash_len: int = 16
+        hash_len: int = 16,
     ):
         """
         Инициализация ModelManager с директорией для хранения моделей и MLflow.
@@ -58,10 +58,10 @@ class ModelManager:
         self._mlflow_tracking_uri = mlflow_tracking_uri
         mlflow.set_tracking_uri(self._mlflow_tracking_uri)
         self.s3_client = boto3.client(
-            's3',
+            "s3",
             endpoint_url=minio_endpoint,
             aws_access_key_id=access_key_id,
-            aws_secret_access_key=secret_access_key
+            aws_secret_access_key=secret_access_key,
         )
         self.minio_bucket = minio_bucket
 
@@ -211,7 +211,7 @@ class ModelManager:
         """
         Сохраняет полученный pd DataFrame в Minio
         """
-        df_name = str(uuid.uuid4()) + '.csv'
+        df_name = str(uuid.uuid4()) + ".csv"
         df_path = os.path.join(self._data_dir, df_name)
         dataframe.to_csv(df_path, index=False)
 
@@ -223,22 +223,22 @@ class ModelManager:
             print("Credentials not available")
 
         try:
-            subprocess.run(['dvc', 'add', df_path], check=True)
+            subprocess.run(["dvc", "add", df_path], check=True)
         except subprocess.CalledProcessError as e:
             print(f"Error adding file to DVC: {e}")
 
         try:
-            subprocess.run(['dvc', 'push'], check=True)
+            subprocess.run(["dvc", "push"], check=True)
         except subprocess.CalledProcessError as e:
             print(f"Error pushing files to DVC: {e}")
 
         return df_name
 
 
-minio_endpoint = os.environ.get('MINIO_ENDPOINT', 'http://minio:9000')
-access_key_id = os.environ.get('MINIO_ROOT_USER', 'user')
-secret_access_key = os.environ.get('MINIO_ROOT_PASSWORD', 'password')
-minio_bucket = os.environ.get('MINIO_BUCKET', 'trainer-bucket')
+minio_endpoint = os.environ.get("MINIO_ENDPOINT", "http://minio:9000")
+access_key_id = os.environ.get("MINIO_ROOT_USER", "user")
+secret_access_key = os.environ.get("MINIO_ROOT_PASSWORD", "password")
+minio_bucket = os.environ.get("MINIO_BUCKET", "trainer-bucket")
 
 MODEL_MANAGER = ModelManager(
     "./models_storage",

@@ -132,6 +132,5 @@ pytest integration_tests
 
 ```bash
 poetry run pylint .
-poetry run black --extend-exclude='/server/grpc/*' . 
-poetry run ruff check --exclude='*.ipynb' .
+poetry run black --check --extend-exclude='/server/grpc/*' . 
 ```
