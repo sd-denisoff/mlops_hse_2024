@@ -3,10 +3,10 @@ Tests
 """
 
 
-def test_save_model_to_real_minio(real_minio):
+def test_save_model_to_minio(minio):
     """Test model saving"""
-    minio_client = real_minio["minio_client"]
-    bucket_name = real_minio["bucket_name"]
+    minio_client = minio["minio_client"]
+    bucket_name = minio["bucket_name"]
     model_key = "models/test_model.pkl"
     model_data = b"dummy model data"
 
