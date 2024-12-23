@@ -9,7 +9,7 @@ def serve():
     """
     Run REST server
     """
-    config = uvicorn.Config("app:app", port=8080, reload=True)
+    config = uvicorn.Config("app:app", host="0.0.0.0", port=8080, reload=True)
     server = uvicorn.Server(config)
 
     try:

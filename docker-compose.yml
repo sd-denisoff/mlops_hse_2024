@@ -1,0 +1,94 @@
+services:
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./minio-data:/data
+    healthcheck:
+      test: curl -I "http://localhost:9000/minio/health/ready"
+      interval: 5s
+      timeout: 2s
+      retries: 5
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: server /data --console-address ":9001"
+
+  create-bucket:
+    image: minio/mc:latest
+    volumes:
+      - ./create_minio_bucket.sh:/create_minio_bucket.sh
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_BUCKET: ${MINIO_BUCKET}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    entrypoint: 
+      - /bin/sh
+      - ./create_minio_bucket.sh
+
+  rest_app:
+    build:
+      context: ./server/rest
+      dockerfile: Dockerfile
+    container_name: rest_app
+    ports:
+      - "8080:8080"
+    environment:
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      MINIO_BUCKET: ${MINIO_BUCKET}
+      MLFLOW_URL: http://mlflow:${MLFLOW_PORT}
+    depends_on:
+      - minio
+      - mlflow
+    entrypoint: /bin/bash
+    command: -c "
+      dvc init --no-scm &&
+      dvc remote add -d minio s3://${MINIO_BUCKET} &&
+      dvc remote modify minio endpointurl http://minio:9000 &&
+      dvc remote modify minio access_key_id ${MINIO_ROOT_USER} &&
+      dvc remote modify minio secret_access_key ${MINIO_ROOT_PASSWORD} &&
+      dvc remote modify minio region us-east-1 &&
+      dvc remote modify minio use_ssl false &&
+      python run.py"
+
+  grpc_service:
+    build:
+      context: ./server/grpc
+      dockerfile: Dockerfile
+    container_name: grpc_service
+    ports:
+      - "50051:50051"
+    depends_on:
+      - minio
+
+  streamlit:
+    build:
+      context: ./gui
+      dockerfile: Dockerfile
+    container_name: streamlit_app
+    ports:
+      - "8501:8501"
+    depends_on:
+      - minio
+      - rest_app
+
+  mlflow:
+    container_name: mlflow
+    build:
+      dockerfile: Dockerfile-mlflow
+    volumes:
+      - ./mlflow_artifacts:${MLFLOW_ARTIFACTS_PATH} 
+    ports:
+      - ${MLFLOW_PORT}:${MLFLOW_PORT}
+    environment:
+      MLFLOW_BACKEND_STORE_URI: ${MLFLOW_DB_PATH}
+      MLFLOW_DEFAULT_ARTIFACT_ROOT: ${MLFLOW_ARTIFACTS_PATH} 
+      MLFLOW_PORT: ${MLFLOW_PORT}
