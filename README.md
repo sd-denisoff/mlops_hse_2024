@@ -87,11 +87,12 @@ poetry run streamlit run gui/🏚_Главная.py
 
 ### Запуск всего через Docker
 
-1. Добавьте файл с переменными окружения
+1. Добавьте файл `.env` с переменными окружения
 
 ```
 MINIO_ROOT_USER=user
 MINIO_ROOT_PASSWORD=password
+MINIO_PORT=9000
 MINIO_BUCKET=trainer-bucket
 
 MLFLOW_PORT=5001
@@ -114,12 +115,22 @@ docker compose -f mlflow-docker-compose.yml up --build
 
 Адрес интерфейса: http://localhost:5001
 
-В рамках ДЗ организовано только развертывание и запуск MLflow. Интеграция с моделями сервиса еще требует настройки.
+
+### Тестирование
+
+Запуск unit-тестов:
+```bash
+pytest unit_tests
+```
+
+Запуск интеграционных тестов (после запуска сервиса с MinIO по [инструкции](#запуск-всего-через-docker)):
+```bash
+pytest integration_tests
+```
 
 ### Проверка качества кода
 
 ```bash
 poetry run pylint .
-poetry run black --extend-exclude='/server/grpc/*' . 
-poetry run ruff check --exclude='*.ipynb' .
+poetry run black --check --extend-exclude='/server/grpc/*' . 
 ```
