@@ -24,4 +24,4 @@ COPY . .
 # Настраиваем Poetry и устанавливаем зависимости
 RUN poetry config virtualenvs.create false && poetry install --no-interaction
 
-# CMD ["sh"]
+CMD ["sh"]
