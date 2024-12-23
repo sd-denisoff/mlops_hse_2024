@@ -1,19 +1,23 @@
 """  
 Manager for models  
 """
-import os
+
+# pylint: disable=too-many-arguments, too-many-positional-arguments, redefined-outer-name, logging-fstring-interpolation
+
 import hashlib
 import logging
-from pathlib import Path
-import mlflow
-from mlflow.models import infer_signature
-import joblib
-import pandas as pd
-from sklearn.metrics import mean_squared_error as mse
-import boto3
-from botocore.exceptions import NoCredentialsError 
-import uuid
+import os
 import subprocess
+import uuid
+from pathlib import Path
+
+import boto3
+import joblib
+import mlflow
+import pandas as pd
+from botocore.exceptions import NoCredentialsError
+from mlflow.models import infer_signature
+from sklearn.metrics import mean_squared_error as mse
 
 from models.ml_models.base_model import MLModel, DataType, TargetType
 from models.ml_models.ml_models import LinRegModel, CatBoostRegModel
@@ -29,16 +33,16 @@ class ModelManager:
     model_classes = [LinRegModel, CatBoostRegModel]
 
     def __init__(
-            self,
-            storage_dir: str,
-            mlflow_tracking_uri: str,
-            minio_endpoint: str,
-            access_key_id: str,
-            secret_access_key: str,
-            minio_bucket: str,
-            data_dir: str,
-            hash_len: int = 16
-        ):
+        self,
+        storage_dir: str,
+        mlflow_tracking_uri: str,
+        minio_endpoint: str,
+        access_key_id: str,
+        secret_access_key: str,
+        minio_bucket: str,
+        data_dir: str,
+        hash_len: int = 16
+    ):
         """
         Инициализация ModelManager с директорией для хранения моделей и MLflow.
         :param storage_dir: Путь к директории, где будут храниться модели.
@@ -53,10 +57,10 @@ class ModelManager:
         self._available_models = {model.__name__: model for model in self.model_classes}
         self._mlflow_tracking_uri = mlflow_tracking_uri
         mlflow.set_tracking_uri(self._mlflow_tracking_uri)
-        self.s3_client = boto3.client(  
-            's3',  
-            endpoint_url=minio_endpoint,  
-            aws_access_key_id=access_key_id,  
+        self.s3_client = boto3.client(
+            's3',
+            endpoint_url=minio_endpoint,
+            aws_access_key_id=access_key_id,
             aws_secret_access_key=secret_access_key
         )
         self.minio_bucket = minio_bucket
@@ -202,7 +206,7 @@ class ModelManager:
         model = self.load_model(model_name)
         LOGGER.info(f"Getting predictions for model {model_name}")
         return model.predict(X)
-    
+
     def save_data_to_s3(self, dataframe: pd.DataFrame):
         """
         Сохраняет полученный pd DataFrame в Minio
@@ -210,25 +214,26 @@ class ModelManager:
         df_name = str(uuid.uuid4()) + '.csv'
         df_path = os.path.join(self._data_dir, df_name)
         dataframe.to_csv(df_path, index=False)
-        
-        try:   
+
+        try:
             self.s3_client.upload_file(df_path, self.minio_bucket, df_name)
-        except FileNotFoundError:  
-            print(f"The file {df_path} was not found")  
-        except NoCredentialsError:  
+        except FileNotFoundError:
+            print(f"The file {df_path} was not found")
+        except NoCredentialsError:
             print("Credentials not available")
 
-        try:  
-            subprocess.run(['dvc', 'add', df_path], check=True)  
-        except subprocess.CalledProcessError as e:  
-            print(f"Error adding file to DVC: {e}")  
+        try:
+            subprocess.run(['dvc', 'add', df_path], check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Error adding file to DVC: {e}")
 
-        try:  
+        try:
             subprocess.run(['dvc', 'push'], check=True)
-        except subprocess.CalledProcessError as e:  
+        except subprocess.CalledProcessError as e:
             print(f"Error pushing files to DVC: {e}")
-        
+
         return df_name
+
 
 minio_endpoint = os.environ.get('MINIO_ENDPOINT', 'http://minio:9000')
 access_key_id = os.environ.get('MINIO_ROOT_USER', 'user')

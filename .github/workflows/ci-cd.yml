@@ -49,8 +49,11 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
-      - name: Run flake8
-        run: poetry run flake8 .
+      - name: Run pylint
+        run: poetry run pylint .
+
+      - name: Run pylint
+        run: poetry run pylint .
 
   test:
     name: Run Tests

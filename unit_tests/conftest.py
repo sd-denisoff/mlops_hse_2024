@@ -9,6 +9,9 @@ from moto import mock_aws
 
 @pytest.fixture(scope="session")
 def mocked_s3() -> dict:
+    """
+    Create mocked S3 client
+    """
     with mock_aws():
         s3 = boto3.client("s3", region_name="us-east-1")
         bucket_name = "test-bucket"

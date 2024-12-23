@@ -12,7 +12,10 @@ load_dotenv()  # загрузка окружения из .env
 
 
 @pytest.fixture(scope="session")
-def minio():
+def minio() -> dict:
+    """
+    Create MinIO client
+    """
     minio_port = os.getenv("MINIO_PORT", "9000")
     access_key = os.getenv("MINIO_ROOT_USER")
     secret_key = os.getenv("MINIO_ROOT_PASSWORD")
